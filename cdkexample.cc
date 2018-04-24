@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <fstream>
 #include <stdio.h> 
+#include <string.h> 
+#include <string> 
 //#include "cdk.h"
 
 
@@ -29,6 +31,18 @@ class BinaryFileHeader
   uint32_t magicNumber;
   uint32_t versionNumber; 
   uint64_t numRecords;
+
+};
+
+
+const int maxRecordStringLength = 25; 
+
+class BinaryFileRecord
+{
+ public: 
+
+  uint8_t strLength;
+  char stringBuffer[maxRecordStringLength]; 
 
 };
 
@@ -97,7 +111,7 @@ int main()
   binFile.read((char *) header, sizeof(BinaryFileHeader));
 
 
-  sprintf(buffer, "Magic: %u", header->magicNumber); 
+  sprintf(buffer, "Magic: 0x%X", header->magicNumber);
 
   setCDKMatrixCell(myMatrix, 1, 1, buffer); 
 
@@ -109,16 +123,47 @@ int main()
 
   setCDKMatrixCell(myMatrix, 1, 3, buffer); 
 
-  binFile.close(); 
 
  
 
+ /*Comment */
 
+
+ unsigned long long recordNum = header->numRecords; 
+ 
+ BinaryFileRecord *record = new BinaryFileRecord(); 
+
+
+
+// string length = "strlen: " + to_string(strlen(record->stringBuffer));
+ string length = ""; 
+
+
+	
+ for(int x = 2; x <= int(recordNum) + 1; x++)
+ {
+	
+ 	binFile.read((char *) record, sizeof(BinaryFileRecord)); 
+
+	length = "strlen: " + to_string(strlen(record->stringBuffer)); 
+
+ 	setCDKMatrixCell(myMatrix, x, 1, length.c_str()); 
+	
+  	sprintf(buffer, " %s", record->stringBuffer);
+
+	
+ 	setCDKMatrixCell(myMatrix, x, 2, buffer); 
+
+
+ }
+
+ binFile.close(); 
+
+ 
 
   /*
    * Dipslay a message
    */
-  setCDKMatrixCell(myMatrix, 2, 2, "Test Message");
   drawCDKMatrix(myMatrix, true);    /* required  */
 
   /* So we can see results, pause until a key is pressed. */
