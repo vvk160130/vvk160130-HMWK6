@@ -8,19 +8,35 @@
 
 #include <iostream>
 #include <cdk.h>
+#include <stdint.h>
+#include <fstream>
+#include <stdio.h> 
 //#include "cdk.h"
 
 
-#define MATRIX_WIDTH 4
-#define MATRIX_HEIGHT 3
-#define BOX_WIDTH 15
+#define MATRIX_WIDTH 3
+#define MATRIX_HEIGHT 5
+#define BOX_WIDTH 25
 #define MATRIX_NAME_STRING "Test Matrix"
 
 using namespace std;
 
 
+class BinaryFileHeader
+{
+ public: 
+
+  uint32_t magicNumber;
+  uint32_t versionNumber; 
+  uint64_t numRecords;
+
+};
+
+
 int main()
 {
+
+  char buffer[1024]; 
 
   WINDOW	*window;
   CDKSCREEN	*cdkscreen;
@@ -65,6 +81,39 @@ int main()
 
   /* Display the Matrix */
   drawCDKMatrix(myMatrix, true);
+
+
+  /* Comment  */
+  BinaryFileHeader *header = new BinaryFileHeader(); 
+
+  ifstream binFile("cs3377.bin", ios::in | ios::binary);  
+
+  if(!binFile)
+  {
+	printf("Error in opening file \n");
+	_exit(1); 
+  }
+
+  binFile.read((char *) header, sizeof(BinaryFileHeader));
+
+
+  sprintf(buffer, "Magic: %u", header->magicNumber); 
+
+  setCDKMatrixCell(myMatrix, 1, 1, buffer); 
+
+  sprintf(buffer, "Version: %d", header->versionNumber);  
+	
+  setCDKMatrixCell(myMatrix, 1, 2, buffer);
+
+  sprintf(buffer, "NumRecords: %lu", header->numRecords); 
+
+  setCDKMatrixCell(myMatrix, 1, 3, buffer); 
+
+  binFile.close(); 
+
+ 
+
+
 
   /*
    * Dipslay a message
