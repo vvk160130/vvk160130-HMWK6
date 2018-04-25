@@ -2,6 +2,7 @@
 # Course Number - 3377
 # Section Number - 501 
 # HMWK - 6
+# Email: vvk160130@utdallas.edu 
 
 CXX = g++
 CXXFLAGS = -Wall -std=c++11 
@@ -15,11 +16,16 @@ LDLIBS = -lcdk -lcurses
 
 PROJECTNAME = Program6
 
+# This is what the executable will be named 
+
 EXECFILE = programsix
 
 OBJS = cdkexample.o
 
 all: $(EXECFILE)
+
+
+# Removes unnecessary files 
 
 clean:
 
@@ -28,6 +34,10 @@ clean:
 
 $(EXECFILE): $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
+
+
+
+# creates a backup 
 
 backup: clean
 	@mkdir -p ~/backups; chmod 700 ~/backups

@@ -3,7 +3,11 @@
  * Course Number: CS 3377
  * Section Number: 501
  * Homework Number: 6
+<<<<<<< HEAD
  * 
+=======
+ * Email: vvk160130@utdallas.edu 
+>>>>>>> working
  */
 
 
